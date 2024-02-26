@@ -1,9 +1,12 @@
+import sys
+import argparse
 from TLB import TLB
 from PageTable import PageTable
 
+# usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
 
-def parse_args
+
 
 def print_stats(translatedAddr, pagefault, hit, miss):
     print("{}, {}, {}, {}".format(address, value, frame_num, frame_content))
@@ -15,9 +18,12 @@ def print_stats(translatedAddr, pagefault, hit, miss):
     print("TLB Miss Rate = %.3f" % (miss/translatedAddr))
 
 def main():
-    alg = ["FIFO", "LRU", "OPT"]
-
-    print_stats
+    parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
+    parser.add_argument('filename', help='Path to the input file')
+    parser.add_argument('--frames', type=int, default=256, help='Number of frames in the system')
+    parser.add_argument('--pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
+    args = parser.parse_args()
+    print_stats()
 
 if __name__ == '__main__':
     main()
