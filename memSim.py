@@ -5,7 +5,7 @@ from PageTable import PageTable
 
 def parse_args
 
-def printStats(translatedAddr, pagefault, hit, miss):
+def print_stats(translatedAddr, pagefault, hit, miss):
     print("{}, {}, {}, {}".format(address, value, frame_num, frame_content))
     print("Number of Translated Addresses = %d" % translatedAddr)
     print("Page Faults = %d" % pagefault)
@@ -16,6 +16,8 @@ def printStats(translatedAddr, pagefault, hit, miss):
 
 def main():
     alg = ["FIFO", "LRU", "OPT"]
+
+    print_stats
 
 if __name__ == '__main__':
     main()
