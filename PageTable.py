@@ -1,12 +1,12 @@
 class PageTable:
 
     #2^8 page table entries
-    def __init__(self, num_pages, num_frames):
-        self.entries = [] *  num_pages 
+    def __init__(self, num_frames):
+        self.entries = [] *  256 
         self.size = 256
         self.page_size = 256
         self.num_frames = num_frames
-        self.num_pages = num_pages
+        self.num_pages = 256
         
     def lookup(self, page):
         return self.entries[page] # Return the physical frame if it exists, else None

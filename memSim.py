@@ -29,6 +29,10 @@ def main():
     parser.add_argument('--pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
     args = parser.parse_args()
 
+    TLB = TLB()
+    PageTable = PageTable(num_frames = args.frames)
+    Memory = Memory(frames=args.frames, alg=args.pra.upper())
+
     pagefaults = 0
     hits = 0
     misses = 0
@@ -52,6 +56,7 @@ def main():
                 physical_address = (frame_number << 8) | page_offset
                 print("Page Table")
             else:
+                Memory[page_number] = pageFaultHandler(page_number)
                 pagefaults += 1
                 # go into back storage and get the page
         
