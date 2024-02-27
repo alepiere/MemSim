@@ -2,12 +2,17 @@ import sys
 import argparse
 from TLB import TLB
 from PageTable import PageTable
+from PhysicalMemory import Memory
 
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
 
 def pageFaultHandler(page_number):
     backing_storage = open("BACKING_STORE.bin", 'rb')
+    offset = page_number * 256
+    backing_storage.seek(offset)
+    page_content = backing_storage.read(256)
+    return page_content
 
 def print_stats(translatedAddr, pagefaults, hits, misses):
     print("Number of Translated Addresses = %d" % len(translatedAddr))
