@@ -30,8 +30,8 @@ def main():
     args = parser.parse_args()
 
     tlb = TLB()
-    page_table = PageTable(num_frames = args.frames)
-    memory = Memory(frames=args.frames, alg=args.pra.upper())
+    page_table = PageTable(num_frames = args.frames, pra = args.pra)
+    memory = Memory(frames=args.frames, pra=args.pra.upper())
 
     pagefaults = 0
     hits = 0
@@ -57,14 +57,18 @@ def main():
             frame_number = page_table.lookup(page_number)
             if frame_number is not None:
                 # get frame from page table
-                physical_address = (frame_number << 8) | page_offset
-                print("Page Table")
+                frame_data = Memory.get_frame_data(frame_number)
+                data_value = frame_data[page_offset:page_offset+1]
             else:
-                memory[page_number] = pageFaultHandler(page_number)
+                frame_data = pageFaultHandler(page_number)
+                print(frame_data)
+                print(page_number)
+                memory.data[page_number] = frame_data
+                data_value = frame_data[page_offset:page_offset+1]
                 pagefaults += 1
                 # go into back storage and get the page
+        print(int.from_bytes(data_value))
         
-
     print_stats(virtual_addresses, pagefaults, hits, misses)
 
 if __name__ == '__main__':
