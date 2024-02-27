@@ -8,7 +8,7 @@ from PageTable import PageTable
 backing_store_bin = "BACKING_STORE.bin"
 
 def calculate_page_number(address, page_size):
-    binary_representation = format(10, '08b')
+    binary_representation = format(address, '08b')
 
 def print_stats(translatedAddr, pagefault, hit, miss):
     print("Number of Translated Addresses = %d" % translatedAddr)

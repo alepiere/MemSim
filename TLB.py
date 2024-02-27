@@ -1,5 +1,5 @@
 class TLB:
-    def __init__(self, size):
+    def __init__(self):
         self.size = 16
         self.entries ={}  # List of tuples (page #, frame #)
 
