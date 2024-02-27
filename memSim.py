@@ -17,10 +17,10 @@ def pageFaultHandler(page_number):
 def print_stats(translatedAddr, pagefaults, hits, misses):
     print("Number of Translated Addresses = %d" % len(translatedAddr))
     print("Page Faults = %d" % pagefaults)
-    print("Page Fault Rate = %.3f" % (pagefaults/translatedAddr))
+    print("Page Fault Rate = %.3f" % (pagefaults/(hits+misses)))
     print("TLB Hits = %d" % hits)
     print("TLB Misses = %d" % misses)
-    print("TLB Miss Rate = %.3f" % (misses/translatedAddr))
+    print("TLB Hit Rate = %.3f" % (hits/(hits+misses)))
 
 def main():
     parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
@@ -50,23 +50,39 @@ def main():
         # if page in TBL, increment TLB hits
         if frame_number is not None:
             hits += 1
-            frame_data = Memory.get_frame_data(frame_number)
-            data_value = frame_data[page_offset:page_offset+1]
+            frame_data = memory.get_frame_data(frame_number)
+            #data_value = frame_data[page_offset:page_offset+1] get data value at end of if statement
         else: 
             misses += 1
+            page_table.printTable()
             frame_number = page_table.lookup(page_number)
             if frame_number is not None:
                 # get frame from page table
-                frame_data = Memory.get_frame_data(frame_number)
-                data_value = frame_data[page_offset:page_offset+1]
+                frame_data = memory.getFrameData(frame_number) 
+                #data_value = frame_data[page_offset:page_offset+1] dont need here and put on bottom
             else:
                 frame_data = pageFaultHandler(page_number)
-                print(frame_data)
-                print(page_number)
-                memory.data[page_number] = frame_data
+                nextIndex = memory.findFreeFrame()
+                if nextIndex is None:
+                    # if there isnt an open index in physical memory, find page to replace
+                    victim = page_table.getVictim()
+                    # keep index of the victim to know where to set new page table entry
+                    nextIndex = page_table.entries[victim]
+                    # set loaded bit to None in page table (none is not loaded)
+                    page_table.update(victim, None)
+                    # update new page table entry with index you are replacing
+                    page_table.update(page_number, nextIndex)
+                    # update the frame in physical memory
+                    memory.updateFrame(nextIndex, frame_data)
+                    #print(frame_data)
+                else:
+                    page_table.update(page_number, nextIndex)
                 data_value = frame_data[page_offset:page_offset+1]
                 pagefaults += 1
                 # go into back storage and get the page
+            #update reference queue with the page number that was accessed/added
+            page_table.updateReferenceQueue(page_number)
+        print(page_number, " is page number for address ", address)
         print(int.from_bytes(data_value))
         
     print_stats(virtual_addresses, pagefaults, hits, misses)
