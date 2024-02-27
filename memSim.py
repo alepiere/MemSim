@@ -35,18 +35,21 @@ def main():
         page_number = int(binary_string[0:8], 2)
         page_offset = int(binary_string[8:], 2)
         print(page_number, page_offset, '\n')
-
+        frame_number = TLB.lookup(page_number)
         # if page in TBL, increment TLB hits
-        if TLB.lookup(page_number) is not None:
+        if frame_number is not None:
             hits += 1
         else: 
             misses += 1
-            if PageTable.lookup(page_number) is not None:
+            frame_number = PageTable.lookup(page_number)
+            if frame_number is not None:
                 # get frame from page table
+                physical_address = (frame_number << 8) | page_offset
                 print("Page Table")
             else:
                 pagefaults += 1
                 # go into back storage and get the page
+        
         
     print_stats(virtual_addresses, pagefaults, hits, misses)
 
