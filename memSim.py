@@ -27,7 +27,11 @@ def main():
 
     reference_file = open(args.filename, 'r')
     virtual_addresses = [int(line.strip()) for line in reference_file]
-
+    for address in virtual_addresses:
+        binary_string = format(address, '016b')
+        page_number = int(binary_string[0:8], 2)
+        page_offset = int(binary_string[8:], 2)
+        print(page_number, page_offset, '\n')
 
     print_stats()
 
