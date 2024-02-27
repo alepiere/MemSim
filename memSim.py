@@ -43,11 +43,15 @@ def main():
         binary_string = format(address, '016b')
         page_number = int(binary_string[0:8], 2)
         page_offset = int(binary_string[8:], 2)
+
         print(page_number, page_offset, '\n')
+
         frame_number = tlb.lookup(page_number)
         # if page in TBL, increment TLB hits
         if frame_number is not None:
             hits += 1
+            frame_data = Memory.get_frame_data(frame_number)
+            data_value = frame_data[page_offset:page_offset+1]
         else: 
             misses += 1
             frame_number = page_table.lookup(page_number)

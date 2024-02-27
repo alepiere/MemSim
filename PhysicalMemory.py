@@ -4,4 +4,5 @@ class Memory:
         self.data = [] * frames
         self.pra = alg
 
-
+    def get_frame_data(self, frame):
+        return self.data[frame]
