@@ -17,10 +17,10 @@ def pageFaultHandler(page_number):
 def print_stats(translatedAddr, pagefaults, hits, misses):
     print("Number of Translated Addresses = %d" % len(translatedAddr))
     print("Page Faults = %d" % pagefaults)
-    print("Page Fault Rate = %.3f" % (pagefaults/translatedAddr))
+    print("Page Fault Rate = %.3f" % (pagefaults/len(translatedAddr)))
     print("TLB Hits = %d" % hits)
     print("TLB Misses = %d" % misses)
-    print("TLB Miss Rate = %.3f" % (misses/translatedAddr))
+    print("TLB Miss Rate = %.3f" % (misses/len(translatedAddr)))
 
 def main():
     parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
