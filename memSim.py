@@ -5,6 +5,7 @@ from PageTable import PageTable
 
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
+def
 
 def calculate_page_number(address, page_size):
     binary_representation = format(10, '08b')
@@ -23,6 +24,11 @@ def main():
     parser.add_argument('--frames', type=int, default=256, help='Number of frames in the system')
     parser.add_argument('--pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
     args = parser.parse_args()
+
+    reference_file = open(args.filename, 'r')
+    virtual_addresses = []
+    
+
     print_stats()
 
 if __name__ == '__main__':
