@@ -5,10 +5,9 @@ from PageTable import PageTable
 
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
-backing_store_bin = "BACKING_STORE.bin"
 
-def calculate_page_number(address, page_size):
-    binary_representation = format(address, '08b')
+def pageFaultHandler(page_number):
+    backing_storage = open("BACKING_STORE.bin", 'rb')
 
 def print_stats(translatedAddr, pagefaults, hits, misses):
     print("Number of Translated Addresses = %d" % len(translatedAddr))
