@@ -1,7 +1,7 @@
 class TLB:
     def __init__(self, size):
         self.size = 16
-        self.entries = []
+        self.entries ={}  # List of tuples (logical_page, physical_frame)
 
     def lookup(self, logical_page):
         for entry in self.entries:

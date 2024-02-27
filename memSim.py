@@ -6,10 +6,10 @@ from PageTable import PageTable
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
 
-
+def calculate_page_number(address, page_size):
+    binary_representation = format(10, '08b')
 
 def print_stats(translatedAddr, pagefault, hit, miss):
-    print("{}, {}, {}, {}".format(address, value, frame_num, frame_content))
     print("Number of Translated Addresses = %d" % translatedAddr)
     print("Page Faults = %d" % pagefault)
     print("Page Fault Rate = %.3f" % (pagefault/translatedAddr))

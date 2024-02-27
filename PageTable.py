@@ -1,10 +1,12 @@
 class PageTable:
 
+    #2^8 page table entries
     def __init__(self, page_size, num_pages, num_frames):
-        self.page_size = page_size
+        self.page_size = 25
         self.num_pages = num_pages
         self.num_frames = num_frames
         self.page_table = [None] * num_pages
+        self.size = 256
 
     # def get_frame(self, page_num):
     #     return self.page_table[page_num]
