@@ -5,7 +5,7 @@ from PageTable import PageTable
 
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
-def
+backing_store_bin = "BACKING_STORE.bin"
 
 def calculate_page_number(address, page_size):
     binary_representation = format(10, '08b')
@@ -26,8 +26,8 @@ def main():
     args = parser.parse_args()
 
     reference_file = open(args.filename, 'r')
-    virtual_addresses = []
-    
+    virtual_addresses = [int(line.strip()) for line in reference_file]
+
 
     print_stats()
 
