@@ -64,7 +64,7 @@ def main():
                 pagefaults += 1
                 # go into back storage and get the page
         
-        
+
     print_stats(virtual_addresses, pagefaults, hits, misses)
 
 if __name__ == '__main__':
