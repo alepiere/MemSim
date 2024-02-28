@@ -55,8 +55,8 @@ def addressesToPageNumbers(addresses):
 def main():
     parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
     parser.add_argument('filename', help='Path to the input file')
-    parser.add_argument('--frames', type=int, default=256, help='Number of frames in the system')
-    parser.add_argument('--pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
+    parser.add_argument('frames', type=int, default=256, help='Number of frames in the system')
+    parser.add_argument('pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
     args = parser.parse_args()
 
     tlb = TLB()
@@ -78,10 +78,10 @@ def main():
         page_number = int(binary_string[0:8], 2)
         page_offset = int(binary_string[8:], 2)
 
-        print(page_number, page_offset, '\n')
+        # print(page_number, page_offset, '\n')
 
         frame_number = tlb.lookup(page_number)
-        tlb.printTable()
+        # tlb.printTable()
         # if page in TBL, increment TLB hits if page still valid
         if frame_number is not None:
             #check if the tlb entry is valid
@@ -113,8 +113,9 @@ def main():
             #update reference queue with the page number that was accessed/added if not OPT
             if args.pra != 'OPT':
                 page_table.updateReferenceQueue(page_number)
-        print(page_number, " is page number for address ", address)
-        print(int.from_bytes(data_value))
+        print("{}, {}, {}, {}".format(address, int.from_bytes(data_value), frame_number, frame_data.hex().upper()))
+        # print(page_number, " is page number for address ", address)
+        # print(int.from_bytes(data_value))
         
     print_stats(virtual_addresses, pagefaults, hits, misses)
 
