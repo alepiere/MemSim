@@ -7,7 +7,7 @@ from PhysicalMemory import Memory
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
 
 
-def pageFaultHandler(page_number):
+def getPageData(page_number):
     backing_storage = open("BACKING_STORE.bin", 'rb')
     offset = page_number * 256
     backing_storage.seek(offset)
@@ -17,10 +17,40 @@ def pageFaultHandler(page_number):
 def print_stats(translatedAddr, pagefaults, hits, misses):
     print("Number of Translated Addresses = %d" % len(translatedAddr))
     print("Page Faults = %d" % pagefaults)
-    print("Page Fault Rate = %.3f" % (pagefaults/len(translatedAddr)))
+    print("Page Fault Rate = %.3f" % (pagefaults/(hits+misses)))
     print("TLB Hits = %d" % hits)
     print("TLB Misses = %d" % misses)
-    print("TLB Miss Rate = %.3f" % (misses/len(translatedAddr)))
+    print("TLB Hit Rate = %.3f" % (hits/(hits+misses)))
+
+def handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set):
+    #get data to be inserted into replaced frame
+    frame_data = getPageData(page_number)
+    #find the next frame number index to replace
+    frame_number = memory.findFreeFrame()
+    if frame_number is None:
+        # if there isnt an open index in physical memory, find page to replace
+        victim = page_table.getVictim(page_numbers, index, opt_set)
+        # keep index of the victim to know where to set new page table entry
+        frame_number = page_table.entries[victim]
+        # set loaded bit to None in page table (none is not loaded)
+        page_table.update(victim, None)
+        del opt_set[victim]
+        # update new page table entry with index you are replacing
+        page_table.update(page_number, frame_number)
+        opt_set[page_number] = 0
+        # update the frame in physical memory
+        memory.updateFrame(frame_number, frame_data)
+    else:
+        page_table.update(page_number, frame_number)
+        opt_set[page_number] = 0
+    return frame_data
+
+def addressesToPageNumbers(addresses):
+    page_numbers = []
+    for address in addresses:
+        page_number = format(address, '016b')
+        page_numbers.append(int(page_number[0:8], 2))
+    return page_numbers
 
 def main():
     parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
@@ -32,14 +62,18 @@ def main():
     tlb = TLB()
     page_table = PageTable(num_frames = args.frames, pra = args.pra)
     memory = Memory(frames=args.frames, pra=args.pra.upper())
+    opt_set = {}
+
+    reference_file = open(args.filename, 'r')
+    virtual_addresses = [int(line.strip()) for line in reference_file]
+    page_numbers = addressesToPageNumbers(virtual_addresses)
 
     pagefaults = 0
     hits = 0
     misses = 0
 
-    reference_file = open(args.filename, 'r')
-    virtual_addresses = [int(line.strip()) for line in reference_file]
-    for address in virtual_addresses:
+    #enumerate to get index in case of the OPT page replacement algorithim
+    for index, address in enumerate(virtual_addresses):
         binary_string = format(address, '016b')
         page_number = int(binary_string[0:8], 2)
         page_offset = int(binary_string[8:], 2)
@@ -47,26 +81,36 @@ def main():
         print(page_number, page_offset, '\n')
 
         frame_number = tlb.lookup(page_number)
-        # if page in TBL, increment TLB hits
+        tlb.printTable()
+        # if page in TBL, increment TLB hits if page still valid
         if frame_number is not None:
-            hits += 1
-            frame_data = Memory.get_frame_data(frame_number)
-            data_value = frame_data[page_offset:page_offset+1]
+            #check if the tlb entry is valid
+            if page_table.lookup(page_number) is None:
+                frame_data = handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set)
+                pagefaults += 1
+                misses+=1
+            else:
+                hits += 1
+                frame_data = memory.getFrameData(frame_number)
         else: 
             misses += 1
             frame_number = page_table.lookup(page_number)
             if frame_number is not None:
-                # get frame from page table
-                frame_data = Memory.get_frame_data(frame_number)
-                data_value = frame_data[page_offset:page_offset+1]
+                # get frame data from page table
+                frame_data = memory.getFrameData(frame_number) 
             else:
-                frame_data = pageFaultHandler(page_number)
-                print(frame_data)
-                print(page_number)
-                memory.data[page_number] = frame_data
+                #no frame number returned = page fault so handle that accordingly
+                frame_data = handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set)
+                #get updated frame number from page table after page fault is resolved
+                frame_number = page_table.lookup(page_number)
+                #extract value using the offset inside the physical memory
                 data_value = frame_data[page_offset:page_offset+1]
                 pagefaults += 1
-                # go into back storage and get the page
+                #only update TLB if page is not already in TLB
+                tlb.insert(page_number, frame_number)
+            #update reference queue with the page number that was accessed/added
+            page_table.updateReferenceQueue(page_number)
+        print(page_number, " is page number for address ", address)
         print(int.from_bytes(data_value))
         
     print_stats(virtual_addresses, pagefaults, hits, misses)

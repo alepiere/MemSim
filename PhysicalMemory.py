@@ -10,7 +10,9 @@ class Memory:
 
     def findFreeFrame(self):
         if self.size < self.frames:
-            return self.size
+            #increment size and then return old value (maybe rework this logic)
+            self.size += 1
+            return (self.size - 1)
         else:
             print("Use page replacement algorithm")
             return None
