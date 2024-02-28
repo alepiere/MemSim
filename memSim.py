@@ -89,6 +89,8 @@ def main():
                 frame_data = handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set)
                 pagefaults += 1
                 misses+=1
+                if args.pra != 'OPT':
+                    page_table.updateReferenceQueue(page_number)
             else:
                 hits += 1
                 frame_data = memory.getFrameData(frame_number)
@@ -108,8 +110,9 @@ def main():
                 pagefaults += 1
                 #only update TLB if page is not already in TLB
                 tlb.insert(page_number, frame_number)
-            #update reference queue with the page number that was accessed/added
-            page_table.updateReferenceQueue(page_number)
+            #update reference queue with the page number that was accessed/added if not OPT
+            if args.pra != 'OPT':
+                page_table.updateReferenceQueue(page_number)
         print(page_number, " is page number for address ", address)
         print(int.from_bytes(data_value))
         
