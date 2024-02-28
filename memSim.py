@@ -113,7 +113,7 @@ def main():
             #update reference queue with the page number that was accessed/added if not OPT
             if args.pra != 'OPT':
                 page_table.updateReferenceQueue(page_number)
-        print("{}, {}, {}, {}".format(address, int.from_bytes(data_value), frame_number, frame_data.hex().upper()))
+        print("{}, {}, {}, {}".format(address, int.from_bytes(data_value, byteorder='big', signed=True), frame_number, frame_data.hex().upper()))
         # print(page_number, " is page number for address ", address)
         # print(int.from_bytes(data_value))
         
