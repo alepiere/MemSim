@@ -55,8 +55,8 @@ def addressesToPageNumbers(addresses):
 def main():
     parser = argparse.ArgumentParser(prog='MemSim', description='Simulate memory management')
     parser.add_argument('filename', help='Path to the input file')
-    parser.add_argument('frames', type=int, default=256, help='Number of frames in the system')
-    parser.add_argument('pra', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
+    parser.add_argument('frames', nargs='?', type=int, default=256, help='Number of frames in the system')
+    parser.add_argument('pra', nargs='?', choices=['FIFO', 'LRU', 'OPT'], default='FIFO', help='Page replacement algorithm')
     args = parser.parse_args()
 
     tlb = TLB()

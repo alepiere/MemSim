@@ -1,0 +1,4 @@
+A 1-2 page report that describes how you modeled the simulator, including each of
+the objects and functional units.
+
+

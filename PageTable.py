@@ -49,12 +49,12 @@ class PageTable:
             victim = self.reference_Queue.get()
         else:
             #check every loaded in frame to see which one will be used further in the future for OPT
-            print("CHECKING OPT LIST")
-            print(page_numbers[index:])
+            # print("CHECKING OPT LIST")
+            # print(page_numbers[index:])
             for key in opt_set:
                 distance = 0
                 for page_num in page_numbers[index:]:
-                    print(distance, " for ", key)
+                    # print(distance, " for ", key)
                     if key == page_num:
                         opt_set[key] = distance
                         break
@@ -63,7 +63,7 @@ class PageTable:
                 else:
                     opt_set[key] = distance
             victim = max(opt_set, key=opt_set.get)
-            print("REMOVING VICTIM", victim, " WITH SCORE ", opt_set[victim])
+            # print("REMOVING VICTIM", victim, " WITH SCORE ", opt_set[victim])
         return victim
 
     def isFull(self):
