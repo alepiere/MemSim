@@ -35,14 +35,17 @@ class PageTable:
         if self.reference_Queue.empty():
             self.reference_Queue.put(page)
         for item in self.reference_Queue.queue:
-                 if item == page:
-                     if self.pra == 'LRU':
+                if item == page:
+                    if self.pra == 'LRU':
                          #look through all the items in reference queue and put page to front
                          #if it is already found to indicate if it has been used recently
                          self.reference_Queue.get(item)
                          self.reference_Queue.put(item) 
-                         break 
+                    break 
                          #do nothing if it is FIFO because it is already in position it should be for replacement order
+        else:
+            self.reference_Queue.put(page)
+
 
     def getVictim(self, page_numbers, index, opt_set):
         if self.pra == 'FIFO' or self.pra == 'LRU':

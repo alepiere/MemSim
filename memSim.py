@@ -87,6 +87,8 @@ def main():
             #check if the tlb entry is valid
             if page_table.lookup(page_number) is None:
                 frame_data = handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set)
+                #update tlb with new frame number
+                tlb.insert(page_number, frame_number)
                 pagefaults += 1
                 misses+=1
                 if args.pra != 'OPT':
@@ -99,7 +101,8 @@ def main():
             frame_number = page_table.lookup(page_number)
             if frame_number is not None:
                 # get frame data from page table
-                frame_data = memory.getFrameData(frame_number) 
+                frame_data = memory.getFrameData(frame_number)
+                tlb.insert(page_number, frame_number) 
             else:
                 #no frame number returned = page fault so handle that accordingly
                 frame_data = handlePageFault(page_number, memory, page_table, page_numbers, index, opt_set)

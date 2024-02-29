@@ -14,7 +14,7 @@ class Memory:
             self.size += 1
             return (self.size - 1)
         else:
-            print("Use page replacement algorithm")
+            #print("Use page replacement algorithm")
             return None
         
     # def addFrame(self, frame, data):
@@ -33,6 +33,3 @@ class Memory:
     
     def updateFrame(self, frame, data):
         self.data[frame] = data
-        
-
-

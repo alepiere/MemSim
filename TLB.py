@@ -3,7 +3,7 @@ from queue import Queue
 
 class TLB:
     def __init__(self):
-        self.size = 16
+        self.size = 5
         self.entries ={}  # List of tuples (page #, frame #)
         self.reference_Queue = Queue()
 
@@ -12,6 +12,7 @@ class TLB:
         return self.entries.get(page, None) # Return the physical frame if it exists, else None
         
     def insert(self, page, frame):
+        #print(self.reference_Queue.queue)
         if self.isFull():
             self.entries.pop(self.reference_Queue.get())
         self.reference_Queue.put(page)
