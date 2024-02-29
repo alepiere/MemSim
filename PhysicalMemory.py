@@ -33,3 +33,6 @@ class Memory:
     
     def updateFrame(self, frame, data):
         self.data[frame] = data
+
+    def printMemory(self):
+        print(self.data)

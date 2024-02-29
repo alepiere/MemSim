@@ -39,9 +39,12 @@ def handlePageFault(page_number, memory, page_table, page_numbers, index, opt_se
         page_table.update(page_number, frame_number)
         opt_set[page_number] = 0
         # update the frame in physical memory
+        #print("WE UPDATING FRAME")
         memory.updateFrame(frame_number, frame_data)
     else:
+        #print("GOT HERE BRUH")
         page_table.update(page_number, frame_number)
+        memory.updateFrame(frame_number, frame_data)
         opt_set[page_number] = 0
     return frame_data
 
@@ -116,6 +119,7 @@ def main():
             #update reference queue with the page number that was accessed/added if not OPT
             if args.pra != 'OPT':
                 page_table.updateReferenceQueue(page_number)
+        #memory.printMemory()
         print("{}, {}, {}, {}".format(address, int.from_bytes(data_value, byteorder='big', signed=True), frame_number, frame_data.hex().upper()))
         # print(page_number, " is page number for address ", address)
         # print(int.from_bytes(data_value))
