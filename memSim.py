@@ -1,11 +1,10 @@
-import sys
+#!/usr/bin/python3
 import argparse
 from TLB import TLB
 from PageTable import PageTable
 from PhysicalMemory import Memory
 
 # usage: memSim <reference-sequence-file.txt> <FRAMES> <PRA>
-
 
 def getPageData(page_number):
     backing_storage = open("BACKING_STORE.bin", 'rb')
@@ -39,10 +38,8 @@ def handlePageFault(page_number, memory, page_table, page_numbers, index, opt_se
         page_table.update(page_number, frame_number)
         opt_set[page_number] = 0
         # update the frame in physical memory
-        #print("WE UPDATING FRAME")
         memory.updateFrame(frame_number, frame_data)
     else:
-        #print("GOT HERE BRUH")
         page_table.update(page_number, frame_number)
         memory.updateFrame(frame_number, frame_data)
         opt_set[page_number] = 0
@@ -75,7 +72,7 @@ def main():
     hits = 0
     misses = 0
 
-    #enumerate to get index in case of the OPT page replacement algorithim
+    #enumerate to get index in case of the OPT page replacement algorithm
     for index, address in enumerate(virtual_addresses):
         binary_string = format(address, '016b')
         page_number = int(binary_string[0:8], 2)
