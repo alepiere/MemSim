@@ -3,7 +3,7 @@ from queue import Queue
 
 class TLB:
     def __init__(self):
-        self.size = 5
+        self.size = 16
         self.entries ={}  # List of tuples (page #, frame #)
         self.reference_Queue = Queue()
 
