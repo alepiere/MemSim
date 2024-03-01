@@ -81,10 +81,7 @@ def main():
         page_number = int(binary_string[0:8], 2)
         page_offset = int(binary_string[8:], 2)
 
-        # print(page_number, page_offset, '\n')
-
         frame_number = tlb.lookup(page_number)
-        # tlb.printTable()
         # if page in TBL, increment TLB hits if page still valid
         if frame_number is not None:
             #check if the tlb entry is valid
@@ -119,10 +116,7 @@ def main():
             #update reference queue with the page number that was accessed/added if not OPT
             if args.pra != 'OPT':
                 page_table.updateReferenceQueue(page_number)
-        #memory.printMemory()
         print("{}, {}, {}, {}".format(address, int.from_bytes(data_value, byteorder='big', signed=True), frame_number, frame_data.hex().upper()))
-        # print(page_number, " is page number for address ", address)
-        # print(int.from_bytes(data_value))
         
     print_stats(virtual_addresses, pagefaults, hits, misses)
 

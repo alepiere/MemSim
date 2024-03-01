@@ -16,19 +16,7 @@ class PageTable:
         return self.entries[page] # Return the physical frame if it exists, else None
         
     def update(self, page, frame):
-        self.entries[page] = frame
-        # if self.entries[page] is None:
-        #     self.entries[page] = frame
-        #     self.reference_Queue.put(page)
-        # else:
-        #     victim = self.reference_Queue.get()
-        #     self.entries.pop(victim)
-        #     self.entries[page] = frame
-        #     for item in self.reference_Queue.queue:
-        #         if item == victim:
-        #             if self.pra == 'LRU':
-        #                 self.reference_Queue.get(item)
-        #                 self.reference_Queue.put(item)     
+        self.entries[page] = frame   
 
     def updateReferenceQueue(self, page):
         #not an eloquent if statement maybe can be made cleaner
@@ -52,12 +40,9 @@ class PageTable:
             victim = self.reference_Queue.get()
         else:
             #check every loaded in frame to see which one will be used further in the future for OPT
-            # print("CHECKING OPT LIST")
-            # print(page_numbers[index:])
             for key in opt_set:
                 distance = 0
                 for page_num in page_numbers[index:]:
-                    # print(distance, " for ", key)
                     if key == page_num:
                         opt_set[key] = distance
                         break
@@ -66,7 +51,6 @@ class PageTable:
                 else:
                     opt_set[key] = distance
             victim = max(opt_set, key=opt_set.get)
-            # print("REMOVING VICTIM", victim, " WITH SCORE ", opt_set[victim])
         return victim
 
     def isFull(self):

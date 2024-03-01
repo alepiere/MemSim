@@ -2,3 +2,21 @@ A 1-2 page report that describes how you modeled the simulator, including each o
 the objects and functional units.
 
 
+1. TLB (Translation Lookaside Buffer):
+The TLB serves as a cache for translating virtual addresses to physical addresses, improving memory access speed by storing frequently accessed address translations. In the provided code, the TLB is implemented as a dictionary with a fixed size. Each entry consists of a page number and its corresponding frame number. To manage its size and ensure efficient replacement, a queue is utilized, employing either FIFO or LRU replacement policies based on the chosen configuration.
+We designed the TLB as a Hashtable to keep tuples of page numbers and frame numbers. However, since hashtables don't have a built-in order, this became a problem when deciding to select a victim frame.
+To solve this, we created a reference queue, which keeps track of accesses pages. When the TLB reaches its maximum capacity, the oldest entry, as determined by the reference queue, is evicted to make room for the new entry.
+
+2. Page Table:
+The Page Table is responsible for maintaining the mapping between virtual pages and physical frames. This mapping allows the CPU to access data stored in physical memory by translating virtual addresses to their corresponding physical addresses. Each entry in the Page Table represents a virtual page and contains the index of the corresponding physical frame where the page is stored. 
+We designed this as an array. To manage page replacement efficiently, the Page Table employs a reference queue or similar mechanism to track page access patterns. In the case of FIFO or LRU algorithms, the reference queue maintains the order in which pages are accessed, facilitating the selection of victim pages for replacement. For the OPT algorithm, the Page Table evaluates the future access patterns of loaded pages, we do this by calculating the distance between each page number and the current page index.
+The loaded bit is None when the data in the table is none, once the table is populated and data is stored, 
+
+3. Physical Memory:
+Physical Memory is where actual page data resides. Modeled as an array of frames, it stores the content of virtual pages loaded from secondary storage. When a page fault occurs, the Physical Memory handles the replacement of pages based on the selected replacement algorithm. It ensures that the most relevant data remains resident in memory for efficient access.
+
+4. Memory Simulator (MemSim):
+The MemSim program orchestrates the entire memory management process. It takes input parameters such as the reference sequence file, the number of frames, and the chosen page replacement algorithm. By reading virtual addresses from the input file, it simulates memory accesses and handles page faults. It tracks TLB hits and misses, updates the TLB and Page Table accordingly, and manages the contents of Physical Memory based on the replacement policy.
+
+Conclusion:
+In conclusion, the virtual memory simulator provides a comprehensive platform for studying memory management strategies. By modeling key components such as the TLB, Page Table, and Physical Memory, users can gain insights into the behavior of virtual memory systems under various conditions. The provided code exemplifies the implementation of these components, offering a practical tool for experimentation and analysis. Further enhancements could include additional replacement algorithms, optimizations for performance, and support for advanced memory management features. Overall, the simulator serves as a valuable resource for researchers, students, and practitioners seeking to deepen their understanding of virtual memory systems.
